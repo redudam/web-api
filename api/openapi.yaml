@@ -1,0 +1,202 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Happy Tail
+  description: Description
+servers:
+- url: http://localhost:8080/{version}
+  description: Sandbox server (uses test data)
+  variables:
+    version:
+      enum:
+      - v1
+      default: v1
+tags:
+  - name: "task"
+  - name: "user"
+
+paths:
+  /tasks:
+    get:
+      tags:
+        - "task"
+      description: |
+        Returns all tasks from the system that the user has access to
+      operationId: findTasks
+      parameters:
+      - name: limit
+        in: query
+        description: maximum number of results to return
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: task response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - "task"
+      description: |
+        Create a new task
+      operationId: createTask
+      parameters:
+        - in:
+#  /users:
+#    get:
+#      tags:
+#        - "user"
+#      description: |
+#        Returns all users from the system
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+  schemas:
+    Task:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          description: 'name'
+        photos:
+          type: array
+          items:
+            type: string
+            format: byte
+        description:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+          enum:
+            - available
+            - in_progress
+            - hidden
+            - done
+            - deleted
+        duration:
+          type: integer
+        time:
+          type: string
+          format: 'date-time'
+        createdAt:
+          type: string
+          format: 'date-time'
+        updatedAt:
+          type: string
+          format: 'date-time'
+        ownerId:
+          type: integer
+          format: int64
+          readOnly: true
+        assigneeId:
+          type: integer
+          format: int64
+          readOnly: true
+        address:
+          $ref: '#/components/schemas/Location'
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - password
+        - phone
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        photo:
+          type: string
+          format: byte
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          writeOnly: true
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+          pattern: '^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$'
+        organization:
+          $ref: '#/components/schemas/Organization'
+        location:
+          $ref: '#/components/schemas/Location'
+        rating:
+          type: number
+          format: double
+          readOnly: true
+        role:
+          type: string
+          enum:
+            - admin
+            - user
+    Organization:
+      type: object
+      required:
+        - id
+        - name
+        - phone
+        - address
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+        address:
+          $ref: '#/components/schemas/Location'
+        phone:
+          type: string
+          pattern: '^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$'
+    Location:
+      type: object
+      properties:
+        lattitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+    Error:
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+security:
+- bearerAuth: []         # use the same name as above
