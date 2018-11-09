@@ -5,6 +5,7 @@ info:
   description: Description
 servers:
 - url: http://localhost:8080/{version}
+- url: http://95.213.28.116:8080/{version}
   description: Sandbox server (uses test data)
   variables:
     version:
