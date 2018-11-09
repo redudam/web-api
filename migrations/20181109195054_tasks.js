@@ -13,8 +13,6 @@ exports.up = function(knex, Promise) {
         table.double('longitude').notNullable();
         table.integer('status').unsigned().notNullable();
         table.foreign('status').references('task_status.id');
-        table.integer('assignee_id').unsigned().nullable();
-        table.foreign('assignee_id').references('user.id');
         table.timestamps();
     })
 };
@@ -23,7 +21,6 @@ exports.down = async function(knex, Promise) {
     await knex.schema.table('task', function (table) {
         table.dropForeign('owner_id');
         table.dropForeign('status');
-        table.dropForeign('assignee_id');
     });
     return knex.schema.dropTable('task');
 };

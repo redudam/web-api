@@ -6,6 +6,7 @@ exports.up = function(knex, Promise) {
         table.double('latitude').notNullable();
         table.double('longitude').notNullable();
         table.string('phone');
+        table.string('photo_content');
     });
 };
 
