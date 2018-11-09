@@ -12,14 +12,14 @@ servers:
       - v1
       default: v1
 tags:
-  - name: "task"
-  - name: "user"
+- name: "task"
+- name: "user"
 
 paths:
   /tasks:
     get:
       tags:
-        - "task"
+      - "task"
       description: |
         Returns all tasks from the system that the user has access to
       operationId: findTasks
@@ -48,18 +48,88 @@ paths:
                 $ref: '#/components/schemas/Error'
     post:
       tags:
-        - "task"
+      - "task"
       description: |
         Create a new task
       operationId: createTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  #  /users:
+  #    get:
+  #      tags:
+  #        - "user"
+  #      description: |
+  #        Returns all users from the system
+  /tasks/{taskId}:
+    get:
+      tags:
+      - "task"
+      description: |
+        Info for a specific task
+      operationId: getTask
       parameters:
-        - in:
-#  /users:
-#    get:
-#      tags:
-#        - "user"
-#      description: |
-#        Returns all users from the system
+      - name: taskId
+        in: path
+        required: true
+        description: The id of the task to retrieve
+        schema:
+          type: string
+      responses:
+        '200':
+          description: task response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - "task"
+      description: |
+        Update a specific task
+      operationId: updateTask
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The id of the task to update
+        schema:
+          type: string
+      responses:
+        '200':
+          description: task response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   securitySchemes:
     bearerAuth:            # arbitrary name for the security scheme
@@ -92,11 +162,11 @@ components:
         status:
           type: string
           enum:
-            - available
-            - in_progress
-            - hidden
-            - done
-            - deleted
+          - available
+          - in_progress
+          - hidden
+          - done
+          - deleted
         duration:
           type: integer
         time:
@@ -121,10 +191,10 @@ components:
     User:
       type: object
       required:
-        - id
-        - email
-        - password
-        - phone
+      - id
+      - email
+      - password
+      - phone
       properties:
         id:
           type: integer
@@ -158,15 +228,15 @@ components:
         role:
           type: string
           enum:
-            - admin
-            - user
+          - admin
+          - user
     Organization:
       type: object
       required:
-        - id
-        - name
-        - phone
-        - address
+      - id
+      - name
+      - phone
+      - address
       properties:
         id:
           type: integer
