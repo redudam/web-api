@@ -12,9 +12,9 @@ const db = {};
 
 const sequelize = new Sequelize(
     'happytail',
-    'happyyail_man',
+    'happytail_man',
     'happytail_pass', {
-        host: '5432',
+        host: '95.213.28.116',
         dialect: 'postgres',
         operatorsAliases: false,
 

@@ -1,6 +1,6 @@
 'use strict';
 
-
+const task = require('../repository/task');
 /**
  * Create a new task 
  *
@@ -8,33 +8,9 @@
  * returns Task
  **/
 exports.createTask = function(body) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "address" : {
-    "lattitude" : 0.8008281904610115,
-    "longitude" : 6.027456183070403
-  },
-  "description" : "description",
-  "ownerId" : 2,
-  "type" : "type",
-  "assigneeId" : 1,
-  "photos" : [ "photos", "photos" ],
-  "duration" : 5,
-  "createdAt" : "2000-01-23T04:56:07.000+00:00",
-  "name" : "name",
-  "id" : 5,
-  "time" : "2000-01-23T04:56:07.000+00:00",
-  "status" : "available",
-  "updatedAt" : "2000-01-23T04:56:07.000+00:00"
+  Object.assign(body, body.address);
+  return task.insert(body);
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
 
 
 /**
@@ -44,50 +20,8 @@ exports.createTask = function(body) {
  * returns List
  **/
 exports.findTasks = function(limit) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "address" : {
-    "lattitude" : 0.8008281904610115,
-    "longitude" : 6.027456183070403
-  },
-  "description" : "description",
-  "ownerId" : 2,
-  "type" : "type",
-  "assigneeId" : 1,
-  "photos" : [ "photos", "photos" ],
-  "duration" : 5,
-  "createdAt" : "2000-01-23T04:56:07.000+00:00",
-  "name" : "name",
-  "id" : 5,
-  "time" : "2000-01-23T04:56:07.000+00:00",
-  "status" : "available",
-  "updatedAt" : "2000-01-23T04:56:07.000+00:00"
-}, {
-  "address" : {
-    "lattitude" : 0.8008281904610115,
-    "longitude" : 6.027456183070403
-  },
-  "description" : "description",
-  "ownerId" : 2,
-  "type" : "type",
-  "assigneeId" : 1,
-  "photos" : [ "photos", "photos" ],
-  "duration" : 5,
-  "createdAt" : "2000-01-23T04:56:07.000+00:00",
-  "name" : "name",
-  "id" : 5,
-  "time" : "2000-01-23T04:56:07.000+00:00",
-  "status" : "available",
-  "updatedAt" : "2000-01-23T04:56:07.000+00:00"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
+  return task.findAll();
+};
 
 
 /**
