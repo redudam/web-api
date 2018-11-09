@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('tasks', {
+  return sequelize.define('user', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -9,67 +9,68 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true,
       field: 'id'
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      field: 'name'
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      field: 'description'
-    },
-    type: {
+    email: {
       type: DataTypes.STRING,
       allowNull: true,
-      field: 'type'
+      field: 'email'
     },
-    duration: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      field: 'duration'
-    },
-    time: {
-      type: DataTypes.DATE,
+    password: {
+      type: DataTypes.STRING,
       allowNull: false,
-      field: 'time'
+      field: 'password'
     },
-    ownerId: {
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'phone'
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'firstName'
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'lastName'
+    },
+    organizationId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'users',
+        model: 'organization',
         key: 'id'
       },
-      field: 'owner_id'
+      field: 'organization_id'
     },
     latitude: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
       field: 'latitude'
     },
     longitude: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
       field: 'longitude'
     },
-    status: {
+    rating: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+      field: 'rating'
+    },
+    role: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'task_status',
+        model: 'role',
         key: 'id'
       },
-      field: 'status'
+      field: 'role'
     },
-    assigneeId: {
-      type: DataTypes.INTEGER,
+    photoContent: {
+      type: DataTypes.STRING,
       allowNull: true,
-      references: {
-        model: 'users',
-        key: 'id'
-      },
-      field: 'assignee_id'
+      field: 'photo_content'
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -82,6 +83,6 @@ module.exports = function(sequelize, DataTypes) {
       field: 'updated_at'
     }
   }, {
-    tableName: 'tasks'
+    tableName: 'user'
   });
 };

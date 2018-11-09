@@ -1,12 +1,12 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('taskPhotos', {
+  return sequelize.define('taskPhoto', {
     taskId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'tasks',
+        model: 'task',
         key: 'id'
       },
       field: 'task_id'
@@ -17,6 +17,6 @@ module.exports = function(sequelize, DataTypes) {
       field: 'url'
     }
   }, {
-    tableName: 'task_photos'
+    tableName: 'task_photo'
   });
 };
