@@ -1,5 +1,5 @@
 exports.up = function (knex, Promise) {
-    return knex.schema.createTable('users', function (table) {
+    return knex.schema.createTable('user', function (table) {
         table.increments('id');
         table.string('email').nullable();
         table.string('password').notNullable();
@@ -12,16 +12,16 @@ exports.up = function (knex, Promise) {
         table.decimal('longitude').nullable();
         table.decimal('rating', 2).nullable();
         table.integer('role').unsigned().notNullable();
-        table.foreign('role').references('roles.id');
+        table.foreign('role').references('role.id');
         table.string('photo_content').nullable();
         table.timestamps();
     })
 };
 
 exports.down = async function (knex, Promise) {
-    await knex.schema.table('users', function (table) {
+    await knex.schema.table('user', function (table) {
         table.dropForeign('organization_id');
         table.dropForeign('role');
     });
-    return knex.schema.dropTable('users');
+    return knex.schema.dropTable('user');
 };
