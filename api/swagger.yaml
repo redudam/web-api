@@ -1,0 +1,270 @@
+---
+swagger: "2.0"
+info:
+  description: "Description"
+  version: "1.0.0"
+  title: "Swagger Happy Tail"
+host: "localhost:8080"
+basePath: "/v1"
+tags:
+- name: "task"
+- name: "user"
+schemes:
+- "http"
+paths:
+  /tasks:
+    get:
+      tags:
+      - "task"
+      description: "Returns all tasks from the system that the user has access to\n"
+      operationId: "findTasks"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "maximum number of results to return"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "task response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Task"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Task"
+    post:
+      tags:
+      - "task"
+      description: "Create a new task\n"
+      operationId: "createTask"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/Task"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/Task"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Task"
+  /tasks/{taskId}:
+    get:
+      tags:
+      - "task"
+      description: "Info for a specific task\n"
+      operationId: "getTask"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        description: "The id of the task to retrieve"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "task response"
+          schema:
+            $ref: "#/definitions/Task"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Task"
+    put:
+      tags:
+      - "task"
+      description: "Update a specific task\n"
+      operationId: "updateTask"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        description: "The id of the task to update"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "task response"
+          schema:
+            $ref: "#/definitions/Task"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Task"
+securityDefinitions:
+  bearerAuth:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  Error:
+    required:
+    - "code"
+    - "message"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+  Location:
+    type: "object"
+    properties:
+      lattitude:
+        type: "number"
+        format: "double"
+      longitude:
+        type: "number"
+        format: "double"
+    example:
+      lattitude: 0.80082819046101150206595775671303272247314453125
+      longitude: 6.02745618307040320615897144307382404804229736328125
+  Organization:
+    type: "object"
+    required:
+    - "address"
+    - "name"
+    - "phone"
+    properties:
+      address:
+        $ref: "#/definitions/Location"
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      name:
+        type: "string"
+      phone:
+        type: "string"
+        pattern: "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$"
+  Task:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      address:
+        $ref: "#/definitions/Location"
+      assigneeId:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      createdAt:
+        type: "string"
+        format: "date-time"
+      description:
+        type: "string"
+      duration:
+        type: "integer"
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      name:
+        type: "string"
+        description: "name"
+      ownerId:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      photos:
+        type: "array"
+        items:
+          type: "string"
+          format: "byte"
+          pattern: "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+      status:
+        type: "string"
+        enum:
+        - "available"
+        - "in_progress"
+        - "hidden"
+        - "done"
+        - "deleted"
+      time:
+        type: "string"
+        format: "date-time"
+      type:
+        type: "string"
+      updatedAt:
+        type: "string"
+        format: "date-time"
+    example:
+      address:
+        lattitude: 0.80082819046101150206595775671303272247314453125
+        longitude: 6.02745618307040320615897144307382404804229736328125
+      description: "description"
+      ownerId: 2
+      type: "type"
+      assigneeId: 1
+      photos:
+      - "photos"
+      - "photos"
+      duration: 5
+      createdAt: "2000-01-23T04:56:07.000+00:00"
+      name: "name"
+      id: 5
+      time: "2000-01-23T04:56:07.000+00:00"
+      status: "available"
+      updatedAt: "2000-01-23T04:56:07.000+00:00"
+  User:
+    type: "object"
+    required:
+    - "email"
+    - "password"
+    - "phone"
+    properties:
+      email:
+        type: "string"
+        format: "email"
+      firstName:
+        type: "string"
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      lastName:
+        type: "string"
+      location:
+        $ref: "#/definitions/Location"
+      organization:
+        $ref: "#/definitions/Organization"
+      password:
+        type: "string"
+        format: "password"
+      phone:
+        type: "string"
+        pattern: "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$"
+      photo:
+        type: "string"
+        format: "byte"
+        pattern: "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+      rating:
+        type: "number"
+        format: "double"
+        readOnly: true
+      role:
+        type: "string"
+        enum:
+        - "admin"
+        - "user"
+x-components: {}

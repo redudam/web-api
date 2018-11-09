@@ -1,47 +1,44 @@
 'use strict';
 
 var fs = require('fs'),
-    http = require('http'),
-    path = require('path');
+    path = require('path'),
+    http = require('http');
 
-var express = require("express");
-var app = express();
-var bodyParser = require('body-parser');
-app.use(bodyParser.json({
-  strict: false
-}));
-var oasTools = require('oas-tools');
+var app = require('connect')();
+var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var serverPort = 8080;
 
-var spec = fs.readFileSync(path.join(__dirname, '/api/openapi.yaml'), 'utf8');
-var oasDoc = jsyaml.safeLoad(spec);
-
-var options_object = {
+// swaggerRouter configuration
+var options = {
+  swaggerUi: path.join(__dirname, '/swagger.json'),
   controllers: path.join(__dirname, './controllers'),
-  loglevel: 'info',
-  strict: false,
-  router: true,
-  validator: true,
-  docs: true
+  useStubs: process.env.NODE_ENV === 'development' // Conditionally turn on stubs (mock mode)
 };
 
-oasTools.configure(options_object);
+// The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
+var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
+var swaggerDoc = jsyaml.safeLoad(spec);
 
-oasTools.initialize(oasDoc, app, function() {
-  http.createServer(app).listen(serverPort, function() {
-    console.log("App running at http://localhost:" + serverPort);
-    console.log("________________________________________________________________");
-    if (options_object.docs !== false) {
-      console.log('API docs (Swagger UI) available on http://localhost:' + serverPort + '/docs');
-      console.log("________________________________________________________________");
-    }
-  });
-});
+// Initialize the Swagger middleware
+swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
-app.get('/info', function(req, res) {
-  res.send({
-    info: "This API was generated using oas-generator!",
-    name: oasDoc.info.title
+  // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
+  app.use(middleware.swaggerMetadata());
+
+  // Validate Swagger requests
+  app.use(middleware.swaggerValidator());
+
+  // Route validated requests to appropriate controller
+  app.use(middleware.swaggerRouter(options));
+
+  // Serve the Swagger documents and Swagger UI
+  app.use(middleware.swaggerUi());
+
+  // Start the server
+  http.createServer(app).listen(serverPort, function () {
+    console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
+    console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
   });
+
 });
