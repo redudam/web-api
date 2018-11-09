@@ -1,0 +1,87 @@
+/* jshint indent: 2 */
+
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('tasks', {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+      field: 'id'
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'name'
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'description'
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'type'
+    },
+    duration: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: 'duration'
+    },
+    time: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'time'
+    },
+    ownerId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'users',
+        key: 'id'
+      },
+      field: 'owner_id'
+    },
+    latitude: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      field: 'latitude'
+    },
+    longitude: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      field: 'longitude'
+    },
+    status: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'task_status',
+        key: 'id'
+      },
+      field: 'status'
+    },
+    assigneeId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'users',
+        key: 'id'
+      },
+      field: 'assignee_id'
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'updated_at'
+    }
+  }, {
+    tableName: 'tasks'
+  });
+};
