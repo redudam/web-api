@@ -88,6 +88,8 @@ module.exports = function(sequelize, DataTypes) {
     task.associate = (models) => {
         task.belongsTo(models.organization, { as: 'organization', foreignKey: 'ownerId' });
         task.belongsTo(models.user, { as: 'assignee', foreignKey: 'assigneeId' });
+        task.belongsTo(models.taskStatus, { as: 'taskStatus', foreignKey: 'status' });
+        task.hasMany(models.taskPhoto, { as: 'photos', foreignKey: 'taskId' });
     };
     return task;
 };
