@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('taskPhoto', {
+  return sequelize.define('taskToUser', {
     taskId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -11,12 +11,16 @@ module.exports = function(sequelize, DataTypes) {
       },
       field: 'task_id'
     },
-    photoContent: {
-      type: DataTypes.STRING,
+    userId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'photo_content'
+      references: {
+        model: 'user',
+        key: 'id'
+      },
+      field: 'user_id'
     }
   }, {
-    tableName: 'task_photo'
+    tableName: 'task_to_user'
   });
 };

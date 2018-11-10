@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-    let task = sequelize.define('task', {
+    const task = sequelize.define('task', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -62,15 +62,6 @@ module.exports = function(sequelize, DataTypes) {
             },
             field: 'status'
         },
-        assigneeId: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            references: {
-                model: 'user',
-                key: 'id'
-            },
-            field: 'assignee_id'
-        },
         createdAt: {
             type: DataTypes.DATE,
             allowNull: true,
@@ -91,5 +82,6 @@ module.exports = function(sequelize, DataTypes) {
         task.belongsTo(models.taskStatus, { as: 'taskStatus', foreignKey: 'status' });
         task.hasMany(models.taskPhoto, { as: 'photos', foreignKey: 'taskId' });
     };
+
     return task;
 };

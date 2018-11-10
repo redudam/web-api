@@ -28,6 +28,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
       field: 'phone'
+    },
+    photoContent: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'photo_content'
     }
   }, {
     tableName: 'organization'
