@@ -3,8 +3,11 @@
 var fs = require('fs'),
     path = require('path'),
     http = require('http');
+const Express = require('express');
 
-var app = require('connect')();
+const error = require('./middleware/error');
+
+var app = Express();
 var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var serverPort = 8080;
@@ -34,6 +37,15 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
   // Serve the Swagger documents and Swagger UI
   app.use(middleware.swaggerUi());
+
+    // if error is not an instanceOf APIError, convert it.
+    app.use(error.converter);
+
+// catch 404 and forward to error handler
+    app.use(error.notFound);
+
+// error handler, send stacktrace only during development
+    app.use(error.handler);
 
   // Start the server
   http.createServer(app).listen(serverPort, function () {
